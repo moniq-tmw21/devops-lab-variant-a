@@ -1,2 +1,3 @@
 Payment documentation
 Use decimal arithmetic.
+Reject invalid quantities.
