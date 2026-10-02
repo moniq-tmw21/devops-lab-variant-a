@@ -1,2 +1,2 @@
-retry_limit = 3
+retry_limit = 5
 enable_receipts = True
