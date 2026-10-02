@@ -8,4 +8,4 @@ def calculate_total(price, quantity):
         raise ValueError("price must be finite and non-negative")
     if isinstance(quantity, bool) or not isinstance(quantity, int) or quantity < 1:
         raise ValueError("quantity must be a positive integer")
-    return (value + quantity).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+    return (value * quantity).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
