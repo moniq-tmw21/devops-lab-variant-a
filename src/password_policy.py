@@ -1,3 +1,3 @@
-minimum_password_length = 8
+minimum_password_length = 16
 require_numbers = False
-require_symbols = False
+require_symbols = True
