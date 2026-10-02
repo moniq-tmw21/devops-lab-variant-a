@@ -1,0 +1,28 @@
+$ python -m compileall -q src tests
+[exit 0]
+
+$ python -m unittest discover -s tests -v
+test_unknown_user (test_app.AuthenticationTests.test_unknown_user) ... ok
+test_valid_user (test_app.AuthenticationTests.test_valid_user) ... ok
+test_wrong_password (test_app.AuthenticationTests.test_wrong_password) ... ok
+test_invalid_price (test_app.PaymentTests.test_invalid_price) ... ok
+test_invalid_quantity (test_app.PaymentTests.test_invalid_quantity) ... ok
+test_multiple_items (test_app.PaymentTests.test_multiple_items) ... ok
+test_rounding (test_app.PaymentTests.test_rounding) ... ok
+test_single_item (test_app.PaymentTests.test_single_item) ... ok
+test_combined_requirements (test_policy.PolicyTests.test_combined_requirements) ... ok
+test_combined_config (test_release.ReleaseTests.test_combined_config) ... ok
+test_receipt (test_release.ReleaseTests.test_receipt) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.001s
+
+OK
+[exit 0]
+
+$ python scripts/security_check.py
+PASS: no prohibited constructs in src
+[exit 0]
+
+$ git diff --check
+[exit 0]

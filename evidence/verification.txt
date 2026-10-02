@@ -1,0 +1,101 @@
+$ git log --graph --oneline --decorate --all
+*   5031bf8 (HEAD -> main, tag: lab/final-release) Resolve final conflict preserving retries and receipts
+|\  
+| * acb0730 (feature-B) Revert "Add receipt helper on the wrong feature branch"
+| * c305ae2 Add receipt helper on the wrong feature branch
+| * 48a0d51 Raise retry limit in feature B
+* |   fb19c9e Merge receipt feature after local validation
+|\ \  
+| |/  
+|/|   
+| * d314423 (feature-A) Add receipt helper on the wrong feature branch
+| * 829a500 Enable receipts in feature A
+|/  
+* 55e892e Update main release procedure while features are in progress
+* cf86155 (tag: lab/payment-after-rebase, origin/feature/payment, feature/payment) Document quantity validation
+* c1e6e79 Document decimal arithmetic
+* 9c5445a Add payment documentation
+* 00327c2 (origin/main, origin/HEAD) Add production decimal handling guidance
+* 8ca8ab9 Add production changelog while feature development continues
+| * a316eda (tag: lab/payment-before-rebase) Document quantity validation
+| * 6c2a881 Document decimal arithmetic
+| * 7d66a05 Add payment documentation
+|/  
+| * 7010fe6 (tag: lab/auth-recovered, lab/auth-forensics) Revert "Refactor credential comparison with an incorrect operator"
+| * e0917d9 Add authentication audit note
+| * dc47961 (tag: lab/auth-first-bad) Refactor credential comparison with an incorrect operator
+| * 93f3978 Document authentication baseline
+|/  
+*   78e6b7e Resolve policy conflict with 16 characters, numbers and symbols
+|\  
+| * 64348a3 (feature/security-rules) Require 16-character passwords and symbols
+* |   ad1c820 Merge numeric password policy
+|\ \  
+| |/  
+|/|   
+| * 2ddd852 (feature/password-policy) Require 12-character passwords and numeric characters
+|/  
+| *   72116da (origin/develop, develop) Synchronize production payment fix with develop
+| |\  
+| |/  
+|/|   
+* |   f0e8d84 (tag: v1.0.1) Merge verified payment hotfix into production locally
+|\ \  
+| * | 39250ce (origin/hotfix/payment-bug, hotfix/payment-bug) Fix payment calculation by multiplying price and quantity
+|/ /  
+| * 26d376d Start unfinished checkout development
+|/  
+* 094de29 (tag: lab/production-before-hotfix) Add e-commerce fixture, regression tests and PR CI
+* 7be5fef Initialize Variant A laboratory repository
+[exit 0]
+
+$ git branch -avv
+  develop                           72116da [origin/develop] Synchronize production payment fix with develop
+  feature-A                         d314423 Add receipt helper on the wrong feature branch
+  feature-B                         acb0730 Revert "Add receipt helper on the wrong feature branch"
+  feature/password-policy           2ddd852 Require 12-character passwords and numeric characters
+  feature/payment                   cf86155 [origin/feature/payment] Document quantity validation
+  feature/security-rules            64348a3 Require 16-character passwords and symbols
+  hotfix/payment-bug                39250ce [origin/hotfix/payment-bug] Fix payment calculation by multiplying price and quantity
+  lab/auth-forensics                7010fe6 Revert "Refactor credential comparison with an incorrect operator"
+* main                              5031bf8 [origin/main: ahead 11] Resolve final conflict preserving retries and receipts
+  remotes/origin/HEAD               -> origin/main
+  remotes/origin/develop            72116da Synchronize production payment fix with develop
+  remotes/origin/feature/payment    cf86155 Document quantity validation
+  remotes/origin/hotfix/payment-bug 39250ce Fix payment calculation by multiplying price and quantity
+  remotes/origin/main               00327c2 Add production decimal handling guidance
+[exit 0]
+
+$ git tag -n
+lab/auth-first-bad Refactor credential comparison with an incorrect operator
+lab/auth-recovered Revert "Refactor credential comparison with an incorrect operator"
+lab/final-release Locally validated final challenge
+lab/payment-after-rebase Document quantity validation
+lab/payment-before-rebase Document quantity validation
+lab/production-before-hotfix Add e-commerce fixture, regression tests and PR CI
+v1.0.1          Payment hotfix release
+[exit 0]
+
+$ git show develop:src/new_checkout.py
+# Unfinished checkout experiment on develop only.
+[exit 0]
+
+$ git show v1.0.1:src/payment.py
+from decimal import Decimal, ROUND_HALF_UP
+
+
+def calculate_total(price, quantity):
+    """Return an exact, two-decimal payment total."""
+    value = Decimal(str(price))
+    if not value.is_finite() or value < 0:
+        raise ValueError("price must be finite and non-negative")
+    if isinstance(quantity, bool) or not isinstance(quantity, int) or quantity < 1:
+        raise ValueError("quantity must be a positive integer")
+    return (value * quantity).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+[exit 0]
+
+$ git show lab/auth-first-bad:src/auth.py
+def authenticate(username, password, users):
+    """Compare test credentials in this educational fixture only."""
+    return username in users and users[username] != password
+[exit 0]

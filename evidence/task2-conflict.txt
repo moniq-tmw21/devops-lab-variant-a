@@ -1,0 +1,105 @@
+$ git checkout -b feature/password-policy
+Switched to a new branch 'feature/password-policy'
+[exit 0]
+
+$ git add .
+[exit 0]
+
+$ git commit -m Require 12-character passwords and numeric characters
+[feature/password-policy 2ddd852] Require 12-character passwords and numeric characters
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+[exit 0]
+
+$ git rev-parse HEAD
+2ddd852d70403440bb6fb96711dd04aa60f9ab34
+[exit 0]
+
+$ git checkout main
+Switched to branch 'main'
+Your branch is up to date with 'origin/main'.
+[exit 0]
+
+$ git checkout -b feature/security-rules
+Switched to a new branch 'feature/security-rules'
+[exit 0]
+
+$ git add .
+[exit 0]
+
+$ git commit -m Require 16-character passwords and symbols
+[feature/security-rules 64348a3] Require 16-character passwords and symbols
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+[exit 0]
+
+$ git rev-parse HEAD
+64348a3e603057020231ded449bb19a03617ddb2
+[exit 0]
+
+$ git checkout main
+Switched to branch 'main'
+Your branch is up to date with 'origin/main'.
+[exit 0]
+
+$ git merge --no-ff feature/password-policy -m Merge numeric password policy
+Merge made by the 'ort' strategy.
+ src/password_policy.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+[exit 0]
+
+$ git merge --no-ff feature/security-rules
+Auto-merging src/password_policy.py
+CONFLICT (content): Merge conflict in src/password_policy.py
+Automatic merge failed; fix conflicts and then commit the result.
+[exit 1]
+
+$ git status --short
+UU src/password_policy.py
+[exit 0]
+
+$ git diff
+diff --cc src/password_policy.py
+index 50e9cc6,3e3ea17..0000000
+--- a/src/password_policy.py
++++ b/src/password_policy.py
+@@@ -1,3 -1,3 +1,9 @@@
+++<<<<<<< HEAD
+ +minimum_password_length = 12
+ +require_numbers = True
+ +require_symbols = False
+++=======
++ minimum_password_length = 16
++ require_numbers = False
++ require_symbols = True
+++>>>>>>> feature/security-rules
+[exit 0]
+
+$ python -m unittest discover -s tests -v
+test_unknown_user (test_app.AuthenticationTests.test_unknown_user) ... ok
+test_valid_user (test_app.AuthenticationTests.test_valid_user) ... ok
+test_wrong_password (test_app.AuthenticationTests.test_wrong_password) ... ok
+test_invalid_price (test_app.PaymentTests.test_invalid_price) ... ok
+test_invalid_quantity (test_app.PaymentTests.test_invalid_quantity) ... ok
+test_multiple_items (test_app.PaymentTests.test_multiple_items) ... ok
+test_rounding (test_app.PaymentTests.test_rounding) ... ok
+test_single_item (test_app.PaymentTests.test_single_item) ... ok
+test_combined_requirements (test_policy.PolicyTests.test_combined_requirements) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.001s
+
+OK
+[exit 0]
+
+$ git add .
+[exit 0]
+
+$ git commit -m Resolve policy conflict with 16 characters, numbers and symbols
+[main 78e6b7e] Resolve policy conflict with 16 characters, numbers and symbols
+[exit 0]
+
+$ git rev-parse HEAD
+78e6b7e181dadb7430fadf187ff6b9cc378ebae2
+[exit 0]
+
+$ git status --short
+[exit 0]

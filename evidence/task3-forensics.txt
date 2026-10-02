@@ -1,0 +1,216 @@
+$ git checkout -b lab/auth-forensics
+Switched to a new branch 'lab/auth-forensics'
+[exit 0]
+
+$ git rev-parse HEAD
+78e6b7e181dadb7430fadf187ff6b9cc378ebae2
+[exit 0]
+
+$ git add .
+[exit 0]
+
+$ git commit -m Document authentication baseline
+[lab/auth-forensics 93f3978] Document authentication baseline
+ 1 file changed, 1 insertion(+)
+ create mode 100644 src/auth_notes.txt
+[exit 0]
+
+$ git rev-parse HEAD
+93f39782589b509a44a4b9930ac7b9a221cbb689
+[exit 0]
+
+$ git add .
+[exit 0]
+
+$ git commit -m Refactor credential comparison with an incorrect operator
+[lab/auth-forensics dc47961] Refactor credential comparison with an incorrect operator
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+[exit 0]
+
+$ git rev-parse HEAD
+dc479613366627aa33cba8463cf40febe3617eaa
+[exit 0]
+
+$ git add .
+[exit 0]
+
+$ git commit -m Add authentication audit note
+[lab/auth-forensics e0917d9] Add authentication audit note
+ 1 file changed, 1 insertion(+)
+[exit 0]
+
+$ git rev-parse HEAD
+e0917d9b499c0e8e84265f72b9b3349e44c054a9
+[exit 0]
+
+$ python -m unittest discover -s tests -v
+test_unknown_user (test_app.AuthenticationTests.test_unknown_user) ... ok
+test_valid_user (test_app.AuthenticationTests.test_valid_user) ... FAIL
+test_wrong_password (test_app.AuthenticationTests.test_wrong_password) ... FAIL
+test_invalid_price (test_app.PaymentTests.test_invalid_price) ... ok
+test_invalid_quantity (test_app.PaymentTests.test_invalid_quantity) ... ok
+test_multiple_items (test_app.PaymentTests.test_multiple_items) ... ok
+test_rounding (test_app.PaymentTests.test_rounding) ... ok
+test_single_item (test_app.PaymentTests.test_single_item) ... ok
+test_combined_requirements (test_policy.PolicyTests.test_combined_requirements) ... ok
+
+======================================================================
+FAIL: test_valid_user (test_app.AuthenticationTests.test_valid_user)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\Codex\2026-10-02\ker-2\outputs\variant-a\tests\test_app.py", line 30, in test_valid_user
+    self.assertTrue(authenticate("alice", "lab-pass", {"alice": "lab-pass"}))
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_wrong_password (test_app.AuthenticationTests.test_wrong_password)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\Codex\2026-10-02\ker-2\outputs\variant-a\tests\test_app.py", line 33, in test_wrong_password
+    self.assertFalse(authenticate("alice", "wrong", {"alice": "lab-pass"}))
+AssertionError: True is not false
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.001s
+
+FAILED (failures=2)
+[exit 1]
+
+$ git log --oneline
+e0917d9 Add authentication audit note
+dc47961 Refactor credential comparison with an incorrect operator
+93f3978 Document authentication baseline
+78e6b7e Resolve policy conflict with 16 characters, numbers and symbols
+ad1c820 Merge numeric password policy
+64348a3 Require 16-character passwords and symbols
+2ddd852 Require 12-character passwords and numeric characters
+f0e8d84 Merge verified payment hotfix into production locally
+39250ce Fix payment calculation by multiplying price and quantity
+094de29 Add e-commerce fixture, regression tests and PR CI
+7be5fef Initialize Variant A laboratory repository
+[exit 0]
+
+$ git bisect start
+status: waiting for both good and bad commits
+[exit 0]
+
+$ git bisect bad
+status: waiting for good commit(s), bad commit known
+[exit 0]
+
+$ git bisect good 78e6b7e181dadb7430fadf187ff6b9cc378ebae2
+Bisecting: 0 revisions left to test after this (roughly 1 step)
+[dc479613366627aa33cba8463cf40febe3617eaa] Refactor credential comparison with an incorrect operator
+[exit 0]
+
+$ git bisect run C:\Users\ASUS\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe -m unittest discover -s tests -p test_app.py
+running 'C:\Users\ASUS\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' '-m' 'unittest' 'discover' '-s' 'tests' '-p' 'test_app.py'
+.FF.....
+======================================================================
+FAIL: test_valid_user (test_app.AuthenticationTests.test_valid_user)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\Codex\2026-10-02\ker-2\outputs\variant-a\tests\test_app.py", line 30, in test_valid_user
+    self.assertTrue(authenticate("alice", "lab-pass", {"alice": "lab-pass"}))
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_wrong_password (test_app.AuthenticationTests.test_wrong_password)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\Codex\2026-10-02\ker-2\outputs\variant-a\tests\test_app.py", line 33, in test_wrong_password
+    self.assertFalse(authenticate("alice", "wrong", {"alice": "lab-pass"}))
+AssertionError: True is not false
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.001s
+
+FAILED (failures=2)
+Bisecting: 0 revisions left to test after this (roughly 0 steps)
+[93f39782589b509a44a4b9930ac7b9a221cbb689] Document authentication baseline
+running 'C:\Users\ASUS\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' '-m' 'unittest' 'discover' '-s' 'tests' '-p' 'test_app.py'
+........
+----------------------------------------------------------------------
+Ran 8 tests in 0.000s
+
+OK
+dc479613366627aa33cba8463cf40febe3617eaa is the first bad commit
+commit dc479613366627aa33cba8463cf40febe3617eaa
+Author: DevOps Lab Student <student@example.invalid>
+Date:   Fri Oct 2 16:46:14 2026 +0500
+
+    Refactor credential comparison with an incorrect operator
+
+ src/auth.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+bisect found first bad commit
+[exit 0]
+
+$ git rev-parse refs/bisect/bad
+dc479613366627aa33cba8463cf40febe3617eaa
+[exit 0]
+
+$ git show --format=fuller --stat dc479613366627aa33cba8463cf40febe3617eaa
+commit dc479613366627aa33cba8463cf40febe3617eaa
+Author:     DevOps Lab Student <student@example.invalid>
+AuthorDate: Fri Oct 2 16:46:14 2026 +0500
+Commit:     DevOps Lab Student <student@example.invalid>
+CommitDate: Fri Oct 2 16:46:14 2026 +0500
+
+    Refactor credential comparison with an incorrect operator
+
+ src/auth.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+[exit 0]
+
+$ git diff dc479613366627aa33cba8463cf40febe3617eaa^ dc479613366627aa33cba8463cf40febe3617eaa -- src/auth.py
+diff --git a/src/auth.py b/src/auth.py
+index 1beb058..ce5abce 100644
+--- a/src/auth.py
++++ b/src/auth.py
+@@ -1,3 +1,3 @@
+ def authenticate(username, password, users):
+     """Compare test credentials in this educational fixture only."""
+-    return username in users and users[username] == password
++    return username in users and users[username] != password
+[exit 0]
+
+$ git tag lab/auth-first-bad dc479613366627aa33cba8463cf40febe3617eaa
+[exit 0]
+
+$ git bisect reset
+Previous HEAD position was 93f3978 Document authentication baseline
+Switched to branch 'lab/auth-forensics'
+[exit 0]
+
+$ git revert --no-edit dc479613366627aa33cba8463cf40febe3617eaa
+[lab/auth-forensics 7010fe6] Revert "Refactor credential comparison with an incorrect operator"
+ Date: Fri Oct 2 16:46:16 2026 +0500
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+[exit 0]
+
+$ python -m unittest discover -s tests -v
+test_unknown_user (test_app.AuthenticationTests.test_unknown_user) ... ok
+test_valid_user (test_app.AuthenticationTests.test_valid_user) ... ok
+test_wrong_password (test_app.AuthenticationTests.test_wrong_password) ... ok
+test_invalid_price (test_app.PaymentTests.test_invalid_price) ... ok
+test_invalid_quantity (test_app.PaymentTests.test_invalid_quantity) ... ok
+test_multiple_items (test_app.PaymentTests.test_multiple_items) ... ok
+test_rounding (test_app.PaymentTests.test_rounding) ... ok
+test_single_item (test_app.PaymentTests.test_single_item) ... ok
+test_combined_requirements (test_policy.PolicyTests.test_combined_requirements) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.000s
+
+OK
+[exit 0]
+
+$ git tag lab/auth-recovered
+[exit 0]
+
+$ git checkout main
+Switched to branch 'main'
+Your branch is ahead of 'origin/main' by 4 commits.
+  (use "git push" to publish your local commits)
+[exit 0]

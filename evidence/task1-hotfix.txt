@@ -1,0 +1,181 @@
+$ python -m unittest discover -s tests -v
+test_unknown_user (test_app.AuthenticationTests.test_unknown_user) ... ok
+test_valid_user (test_app.AuthenticationTests.test_valid_user) ... ok
+test_wrong_password (test_app.AuthenticationTests.test_wrong_password) ... ok
+test_invalid_price (test_app.PaymentTests.test_invalid_price) ... ok
+test_invalid_quantity (test_app.PaymentTests.test_invalid_quantity) ... ok
+test_multiple_items (test_app.PaymentTests.test_multiple_items) ... FAIL
+test_rounding (test_app.PaymentTests.test_rounding) ... FAIL
+test_single_item (test_app.PaymentTests.test_single_item) ... FAIL
+
+======================================================================
+FAIL: test_multiple_items (test_app.PaymentTests.test_multiple_items)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\Codex\2026-10-02\ker-2\outputs\variant-a\tests\test_app.py", line 9, in test_multiple_items
+    self.assertEqual(calculate_total("19.99", 3), Decimal("59.97"))
+AssertionError: Decimal('22.99') != Decimal('59.97')
+
+======================================================================
+FAIL: test_rounding (test_app.PaymentTests.test_rounding)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\Codex\2026-10-02\ker-2\outputs\variant-a\tests\test_app.py", line 15, in test_rounding
+    self.assertEqual(calculate_total("0.335", 3), Decimal("1.01"))
+AssertionError: Decimal('3.34') != Decimal('1.01')
+
+======================================================================
+FAIL: test_single_item (test_app.PaymentTests.test_single_item)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\Codex\2026-10-02\ker-2\outputs\variant-a\tests\test_app.py", line 12, in test_single_item
+    self.assertEqual(calculate_total("12.50", 1), Decimal("12.50"))
+AssertionError: Decimal('13.50') != Decimal('12.50')
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.001s
+
+FAILED (failures=3)
+[exit 1]
+
+$ git checkout -b develop
+Switched to a new branch 'develop'
+[exit 0]
+
+$ git add .
+[exit 0]
+
+$ git commit -m Start unfinished checkout development
+[develop 26d376d] Start unfinished checkout development
+ 1 file changed, 1 insertion(+)
+ create mode 100644 src/new_checkout.py
+[exit 0]
+
+$ git rev-parse HEAD
+26d376d9d956205c1e2cd344ef3b4d57f925c808
+[exit 0]
+
+$ git push -u origin develop
+To C:\Users\ASUS\Documents\Codex\2026-10-02\ker-2\work\origin.git
+ * [new branch]      develop -> develop
+branch 'develop' set up to track 'origin/develop'.
+[exit 0]
+
+$ git checkout main
+Switched to branch 'main'
+Your branch is up to date with 'origin/main'.
+[exit 0]
+
+$ git pull --ff-only origin main
+From C:\Users\ASUS\Documents\Codex\2026-10-02\ker-2\work\origin
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+[exit 0]
+
+$ git checkout -b hotfix/payment-bug
+Switched to a new branch 'hotfix/payment-bug'
+[exit 0]
+
+$ python -m unittest discover -s tests -v
+test_unknown_user (test_app.AuthenticationTests.test_unknown_user) ... ok
+test_valid_user (test_app.AuthenticationTests.test_valid_user) ... ok
+test_wrong_password (test_app.AuthenticationTests.test_wrong_password) ... ok
+test_invalid_price (test_app.PaymentTests.test_invalid_price) ... ok
+test_invalid_quantity (test_app.PaymentTests.test_invalid_quantity) ... ok
+test_multiple_items (test_app.PaymentTests.test_multiple_items) ... ok
+test_rounding (test_app.PaymentTests.test_rounding) ... ok
+test_single_item (test_app.PaymentTests.test_single_item) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.000s
+
+OK
+[exit 0]
+
+$ git add .
+[exit 0]
+
+$ git commit -m Fix payment calculation by multiplying price and quantity
+[hotfix/payment-bug 39250ce] Fix payment calculation by multiplying price and quantity
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+[exit 0]
+
+$ git rev-parse HEAD
+39250ce42533a581b732c294d62a0d7ed2028def
+[exit 0]
+
+$ git push -u origin hotfix/payment-bug
+To C:\Users\ASUS\Documents\Codex\2026-10-02\ker-2\work\origin.git
+ * [new branch]      hotfix/payment-bug -> hotfix/payment-bug
+branch 'hotfix/payment-bug' set up to track 'origin/hotfix/payment-bug'.
+[exit 0]
+
+$ git checkout main
+Switched to branch 'main'
+Your branch is up to date with 'origin/main'.
+[exit 0]
+
+$ git merge --no-ff hotfix/payment-bug -m Merge verified payment hotfix into production locally
+Merge made by the 'ort' strategy.
+ src/payment.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+[exit 0]
+
+$ git tag -a v1.0.1 -m Payment hotfix release
+[exit 0]
+
+$ git push origin main v1.0.1
+To C:\Users\ASUS\Documents\Codex\2026-10-02\ker-2\work\origin.git
+   094de29..f0e8d84  main -> main
+ * [new tag]         v1.0.1 -> v1.0.1
+[exit 0]
+
+$ git checkout develop
+Switched to branch 'develop'
+Your branch is up to date with 'origin/develop'.
+[exit 0]
+
+$ git merge --no-ff main -m Synchronize production payment fix with develop
+Merge made by the 'ort' strategy.
+ src/payment.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+[exit 0]
+
+$ python -m unittest discover -s tests -v
+test_unknown_user (test_app.AuthenticationTests.test_unknown_user) ... ok
+test_valid_user (test_app.AuthenticationTests.test_valid_user) ... ok
+test_wrong_password (test_app.AuthenticationTests.test_wrong_password) ... ok
+test_invalid_price (test_app.PaymentTests.test_invalid_price) ... ok
+test_invalid_quantity (test_app.PaymentTests.test_invalid_quantity) ... ok
+test_multiple_items (test_app.PaymentTests.test_multiple_items) ... ok
+test_rounding (test_app.PaymentTests.test_rounding) ... ok
+test_single_item (test_app.PaymentTests.test_single_item) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.000s
+
+OK
+[exit 0]
+
+$ git push origin develop
+To C:\Users\ASUS\Documents\Codex\2026-10-02\ker-2\work\origin.git
+   26d376d..72116da  develop -> develop
+[exit 0]
+
+$ git checkout main
+Switched to branch 'main'
+Your branch is up to date with 'origin/main'.
+[exit 0]
+
+$ git log --graph --oneline --all --decorate
+*   72116da (origin/develop, develop) Synchronize production payment fix with develop
+|\  
+| *   f0e8d84 (HEAD -> main, tag: v1.0.1, origin/main, origin/HEAD) Merge verified payment hotfix into production locally
+| |\  
+| | * 39250ce (origin/hotfix/payment-bug, hotfix/payment-bug) Fix payment calculation by multiplying price and quantity
+| |/  
+* / 26d376d Start unfinished checkout development
+|/  
+* 094de29 (tag: lab/production-before-hotfix) Add e-commerce fixture, regression tests and PR CI
+* 7be5fef Initialize Variant A laboratory repository
+[exit 0]

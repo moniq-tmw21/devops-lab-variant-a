@@ -1,0 +1,64 @@
+$ git init -b main
+Initialized empty Git repository in C:/Users/ASUS/Documents/Codex/2026-10-02/ker-2/work/seed/.git/
+[exit 0]
+
+$ git config user.name DevOps Lab Student
+[exit 0]
+
+$ git config user.email student@example.invalid
+[exit 0]
+
+$ git add .
+[exit 0]
+
+$ git commit -m Initialize Variant A laboratory repository
+[main (root-commit) 7be5fef] Initialize Variant A laboratory repository
+ 1 file changed, 1 insertion(+)
+ create mode 100644 README.md
+[exit 0]
+
+$ git clone --bare <local-lab>\seed <local-lab>\origin.git
+Cloning into bare repository 'C:\Users\ASUS\Documents\Codex\2026-10-02\ker-2\work\origin.git'...
+done.
+[exit 0]
+
+$ git clone <local-lab>\origin.git C:\Users\ASUS\Documents\Codex\2026-10-02\ker-2\outputs\variant-a
+Cloning into 'C:\Users\ASUS\Documents\Codex\2026-10-02\ker-2\outputs\variant-a'...
+done.
+[exit 0]
+
+$ git config user.name DevOps Lab Student
+[exit 0]
+
+$ git config user.email student@example.invalid
+[exit 0]
+
+$ git add .
+[exit 0]
+
+$ git commit -m Add e-commerce fixture, regression tests and PR CI
+[main 094de29] Add e-commerce fixture, regression tests and PR CI
+ 9 files changed, 118 insertions(+)
+ create mode 100644 .github/workflows/test.yml
+ create mode 100644 .gitignore
+ create mode 100644 requirements-dev.txt
+ create mode 100644 scripts/security_check.py
+ create mode 100644 src/__init__.py
+ create mode 100644 src/auth.py
+ create mode 100644 src/password_policy.py
+ create mode 100644 src/payment.py
+ create mode 100644 tests/test_app.py
+[exit 0]
+
+$ git rev-parse HEAD
+094de29aa6cabfab3d5e1af80124734ef7b5424e
+[exit 0]
+
+$ git tag lab/production-before-hotfix
+[exit 0]
+
+$ git push origin main --tags
+To C:\Users\ASUS\Documents\Codex\2026-10-02\ker-2\work\origin.git
+   7be5fef..094de29  main -> main
+ * [new tag]         lab/production-before-hotfix -> lab/production-before-hotfix
+[exit 0]

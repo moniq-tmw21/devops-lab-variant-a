@@ -1,0 +1,182 @@
+$ git checkout -b feature/payment
+Switched to a new branch 'feature/payment'
+[exit 0]
+
+$ git add .
+[exit 0]
+
+$ git commit -m Add payment documentation
+[feature/payment 7d66a05] Add payment documentation
+ 1 file changed, 1 insertion(+)
+ create mode 100644 src/payment_notes.txt
+[exit 0]
+
+$ git rev-parse HEAD
+7d66a05848f963580aa50024a60c69dc22b4a675
+[exit 0]
+
+$ git add .
+[exit 0]
+
+$ git commit -m Document decimal arithmetic
+[feature/payment 6c2a881] Document decimal arithmetic
+ 1 file changed, 1 insertion(+)
+[exit 0]
+
+$ git rev-parse HEAD
+6c2a881b82218b82988e1cafa02af8d03bedb679
+[exit 0]
+
+$ git add .
+[exit 0]
+
+$ git commit -m Document quantity validation
+[feature/payment a316eda] Document quantity validation
+ 1 file changed, 1 insertion(+)
+[exit 0]
+
+$ git rev-parse HEAD
+a316edad879c7f5ce86e546685355224bcdb3028
+[exit 0]
+
+$ git push -u origin feature/payment
+To C:\Users\ASUS\Documents\Codex\2026-10-02\ker-2\work\origin.git
+ * [new branch]      feature/payment -> feature/payment
+branch 'feature/payment' set up to track 'origin/feature/payment'.
+[exit 0]
+
+$ git tag lab/payment-before-rebase
+[exit 0]
+
+$ git checkout main
+Switched to branch 'main'
+Your branch is ahead of 'origin/main' by 4 commits.
+  (use "git push" to publish your local commits)
+[exit 0]
+
+$ git add .
+[exit 0]
+
+$ git commit -m Add production changelog while feature development continues
+[main 8ca8ab9] Add production changelog while feature development continues
+ 1 file changed, 4 insertions(+)
+ create mode 100644 CHANGELOG.md
+[exit 0]
+
+$ git rev-parse HEAD
+8ca8ab991cfc70e9f2e09df11445d2246b92fc04
+[exit 0]
+
+$ git add .
+[exit 0]
+
+$ git commit -m Add production decimal handling guidance
+[main 00327c2] Add production decimal handling guidance
+ 1 file changed, 2 insertions(+)
+ create mode 100644 docs/decimal.md
+[exit 0]
+
+$ git rev-parse HEAD
+00327c2057df97af4e26b6b4aba084657095693b
+[exit 0]
+
+$ git push origin main
+To C:\Users\ASUS\Documents\Codex\2026-10-02\ker-2\work\origin.git
+   f0e8d84..00327c2  main -> main
+[exit 0]
+
+$ git fetch origin
+[exit 0]
+
+$ git log --graph --oneline --all --decorate -18
+* 00327c2 (HEAD -> main, origin/main, origin/HEAD) Add production decimal handling guidance
+* 8ca8ab9 Add production changelog while feature development continues
+| * a316eda (tag: lab/payment-before-rebase, origin/feature/payment, feature/payment) Document quantity validation
+| * 6c2a881 Document decimal arithmetic
+| * 7d66a05 Add payment documentation
+|/  
+| * 7010fe6 (tag: lab/auth-recovered, lab/auth-forensics) Revert "Refactor credential comparison with an incorrect operator"
+| * e0917d9 Add authentication audit note
+| * dc47961 (tag: lab/auth-first-bad) Refactor credential comparison with an incorrect operator
+| * 93f3978 Document authentication baseline
+|/  
+*   78e6b7e Resolve policy conflict with 16 characters, numbers and symbols
+|\  
+| * 64348a3 (feature/security-rules) Require 16-character passwords and symbols
+* |   ad1c820 Merge numeric password policy
+|\ \  
+| |/  
+|/|   
+| * 2ddd852 (feature/password-policy) Require 12-character passwords and numeric characters
+|/  
+| *   72116da (origin/develop, develop) Synchronize production payment fix with develop
+| |\  
+| |/  
+|/|   
+* |   f0e8d84 (tag: v1.0.1) Merge verified payment hotfix into production locally
+|\ \  
+| * | 39250ce (origin/hotfix/payment-bug, hotfix/payment-bug) Fix payment calculation by multiplying price and quantity
+|/ /  
+| * 26d376d Start unfinished checkout development
+|/  
+* 094de29 (tag: lab/production-before-hotfix) Add e-commerce fixture, regression tests and PR CI
+[exit 0]
+
+$ git checkout feature/payment
+Switched to branch 'feature/payment'
+Your branch is up to date with 'origin/feature/payment'.
+[exit 0]
+
+$ git rebase main
+Rebasing (1/3)
+Rebasing (2/3)
+Rebasing (3/3)
+Successfully rebased and updated refs/heads/feature/payment.
+[exit 0]
+
+$ git merge-base --is-ancestor main feature/payment
+[exit 0]
+
+$ git log --oneline main..feature/payment
+cf86155 Document quantity validation
+c1e6e79 Document decimal arithmetic
+9c5445a Add payment documentation
+[exit 0]
+
+$ git push --force-with-lease origin feature/payment
+To C:\Users\ASUS\Documents\Codex\2026-10-02\ker-2\work\origin.git
+ + a316eda...cf86155 feature/payment -> feature/payment (forced update)
+[exit 0]
+
+$ git tag lab/payment-after-rebase
+[exit 0]
+
+$ python -m unittest discover -s tests -v
+test_unknown_user (test_app.AuthenticationTests.test_unknown_user) ... ok
+test_valid_user (test_app.AuthenticationTests.test_valid_user) ... ok
+test_wrong_password (test_app.AuthenticationTests.test_wrong_password) ... ok
+test_invalid_price (test_app.PaymentTests.test_invalid_price) ... ok
+test_invalid_quantity (test_app.PaymentTests.test_invalid_quantity) ... ok
+test_multiple_items (test_app.PaymentTests.test_multiple_items) ... ok
+test_rounding (test_app.PaymentTests.test_rounding) ... ok
+test_single_item (test_app.PaymentTests.test_single_item) ... ok
+test_combined_requirements (test_policy.PolicyTests.test_combined_requirements) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.000s
+
+OK
+[exit 0]
+
+$ git checkout main
+Switched to branch 'main'
+Your branch is up to date with 'origin/main'.
+[exit 0]
+
+$ git merge --ff-only feature/payment
+Updating 00327c2..cf86155
+Fast-forward
+ src/payment_notes.txt | 3 +++
+ 1 file changed, 3 insertions(+)
+ create mode 100644 src/payment_notes.txt
+[exit 0]
